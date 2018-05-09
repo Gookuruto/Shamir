@@ -7,6 +7,7 @@ from math import *
 import time
 from random import shuffle
 
+
 def build_in(aa, N):
     n = len(aa)
     for i in xrange(n):
@@ -23,12 +24,13 @@ def build_in(aa, N):
         A[n + i - 1, i] = 1
         b[n + i - 1] = aa[i] - 1
         c[n + i - 1] = 1
-    #print A
-    #print b
-    #print c
+    # print A
+    # print b
+    # print c
     return (A, b, c)
 
-def face_enumerator(b, c, depth = 0, d = 0):
+
+def face_enumerator(b, c, depth=0, d=0):
     n = b.shape[0]
     if (depth == 0):
         d = sp.zeros(n, 1)
@@ -45,6 +47,7 @@ def face_enumerator(b, c, depth = 0, d = 0):
             for f in fe:
                 yield f
 
+
 def check(A, b, c, v):
     m = A.shape[0]
     w = A * v
@@ -52,6 +55,8 @@ def check(A, b, c, v):
         if (b[i, 0] < w[i, 0] or w[i, 0] < c[i, 0]):
             return False
     return True
+
+
 def delete_useless_rows(A, b, c):
     nA = A[:, :]
     nb = b[:, :]
@@ -94,6 +99,7 @@ def delete_useless_rows(A, b, c):
                 nm += 1
     return (True, nA[:nm, :], nb[:nm, :], nc[:nm, :])
 
+
 def get_vertices_boost(A, b, c):
     vs = []
     m = A.shape[0]
@@ -121,6 +127,7 @@ def get_vertices_boost(A, b, c):
             important.append(i)
     return (vs, important)
 
+
 def get_vertices(A, b, c):
     vs = []
     m = A.shape[0]
@@ -145,6 +152,7 @@ def get_vertices(A, b, c):
         if (used[i, 0] != 0):
             important.append(i)
     return (vs, important)
+
 
 def regular_simplex(n):
     RS = sp.Matrix([[1, 0, 0, 0],
@@ -211,9 +219,9 @@ def get_endomorphism(A, b, c, Simplex, v0, S, cols):
         Vol = Si * S
         mi = 0
         mj = 0
-        #print Si
-        #print(S)
-        #print Vol
+        # print Si
+        # print(S)
+        # print Vol
         for i in xrange(n):
             for j in xrange(nv - 1):
                 if (abs(Vol[i, j]) > abs(Vol[mi, mj])):
@@ -331,11 +339,11 @@ def make_integer_matrix(A):
 
 
 def egcd(a, b):
-    x,y, u,v = 0,1, 1,0
+    x, y, u, v = 0, 1, 1, 0
     while a != 0:
         q, r = b // a, b % a
         m, n = x - u * q, y - v * q
-        b,a, x,y, u,v = a,r, u,v, m,n
+        b, a, x, y, u, v = a, r, u, v, m, n
     gcd = b
     return (gcd, x, y)
 
@@ -539,6 +547,7 @@ def Lenstra(A, b, c, boost=False):
                 i += 1
         return (True, ans)
 
+
 def unique(lst):
     ans = []
     first = True
@@ -633,16 +642,16 @@ def Shamir_attack(aa):
     print len(aa)
     for i in xrange(cn):
         for j in xrange(cn):
-            #print "1 petla"
+            # print "1 petla"
             if (j == i):
                 continue
             for k in xrange(cn):
-                #print "2 petla"
-                if (k == j or k == i):
+                # print "2 petla"
+                if k == j or k == i:
                     continue
                 for h in xrange(cn):
-                    #print "finalowa petla"
-                    if (h == k or h == j or h == i):
+                    # print "finalowa petla"
+                    if h == k or h == j or h == i:
                         continue
                     print i, j, k, h
                     (A, b, c) = build_in([aa[i], aa[j], aa[k], aa[h]], N)
@@ -651,17 +660,19 @@ def Shamir_attack(aa):
                     for a in ans:
                         x = a[0]
                         segments = solve(aa, i, x)
-                        #print "segments = "+str(segments)
-                        #print "len segments= "+str(len(segments))
+                        # print "segments = "+str(segments)
+                        # print "len segments= "+str(len(segments))
                         if (len(segments) > 0):
                             ans = find_Wi_M(segments, N, aa)
-                            print "len ans= "+str(len(ans))
+                            print "len ans= " + str(len(ans))
                             if (len(ans) > 0):
                                 return ans
-                    #break
-                #break
-            #break
-        #break
+                    # break
+                # break
+            # break
+        # break
+
+
 def find_Wi_M(segs, N, aa):
     ans = []
     for seg in segs:
@@ -697,6 +708,7 @@ def find_Wi_M(segs, N, aa):
         ans.append(from_cfraction(cfm))
     return ans
 
+
 def to_cfraction(x):
     ans = []
     while (True):
@@ -708,6 +720,7 @@ def to_cfraction(x):
         x = 1 / x
     return ans
 
+
 def from_cfraction(lst):
     x = Fraction(0)
     for d in reversed(lst):
@@ -716,12 +729,13 @@ def from_cfraction(lst):
     x = 1 / x
     return (x.numerator, x.denominator)
 
+
 def read_public_key(filename):
     f = open(filename)
     i = 0
-    vals=list()
+    vals = list()
     for line in f:
-        #if (i == 1):
+        # if (i == 1):
         vals.append(line)
     for i in xrange(len(vals)):
         vals[i] = long(vals[i])
@@ -729,8 +743,7 @@ def read_public_key(filename):
     return vals
 
 
-val=read_public_key("p_key.txt")
+val = read_public_key("p_key.txt")
 print val
-shamirs=Shamir_attack(val)
+shamirs = Shamir_attack(val)
 print(shamirs)
-
